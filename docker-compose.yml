@@ -5,9 +5,9 @@ services:
     environment:
       POSTGRES_USER: zachariekouemegni
       POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres
+      PGDATA: /data/customer
     volumes:
-      - db:/data/postgres
+      - db:/data/customer
     ports:
       - "5332:5432"
     networks:
