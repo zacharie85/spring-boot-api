@@ -39,4 +39,17 @@ public class Main {
         customer.setAge(request.age());
         customerRepository.save(customer);
     }
+    @DeleteMapping("{customerID}")
+    public void deleteCustomer(@PathVariable("customerID") Integer id){
+            customerRepository.deleteById(id);
+    }
+    @PutMapping("{customerID}")
+    public void updateCustomer(@PathVariable("customerID") Integer id,
+                               @RequestBody NewCustomerRequest request){
+        Customer customer = customerRepository.getReferenceById(id);
+        customer.setName(request.name());
+        customer.setEmail(request.email());
+        customer.setAge(request.age());
+        customerRepository.save(customer);
+    }
 }
