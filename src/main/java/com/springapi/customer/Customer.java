@@ -1,4 +1,4 @@
-package com.springapi;
+package com.springapi.customer;
 
 import jakarta.persistence.*;
 
