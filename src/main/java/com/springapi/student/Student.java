@@ -1,8 +1,12 @@
 package com.springapi.student;
 
+import com.springapi.book.Book;
+import com.springapi.enrolment.Enrolment;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Table(
@@ -51,6 +55,27 @@ public class Student {
             nullable = false
     )
     private Integer age;
+    // BiDirectional relationships
+    @OneToOne(
+            mappedBy = "student",
+            orphanRemoval = true, // when delete student , we also want to delete student_id_card
+            cascade = {CascadeType.PERSIST,CascadeType.REMOVE}
+    )
+    private  StudentIdCard studentIdCard;
+
+    @OneToMany(
+            mappedBy = "student",
+            orphanRemoval = true, // when delete student , we also want to delete student_id_card,
+            cascade = {CascadeType.PERSIST,CascadeType.REMOVE}
+    )
+    private List<Book> books = new ArrayList<>();;
+
+    @OneToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            mappedBy = "student"
+    )
+    private List<Enrolment> enrolments = new ArrayList<>();
+
     public Student() {
 
     }
@@ -61,7 +86,19 @@ public class Student {
         this.email = email;
         this.age = age;
     }
+    public List<Enrolment> getEnrolments() {
+        return enrolments;
+    }
 
+    public void addEnrolment(Enrolment enrolment) {
+        if (!enrolments.contains(enrolment)) {
+            enrolments.add(enrolment);
+        }
+    }
+
+    public void removeEnrolment(Enrolment enrolment) {
+        enrolments.remove(enrolment);
+    }
     public Long getId() {
         return id;
     }
@@ -102,6 +139,19 @@ public class Student {
         this.age = age;
     }
 
+    public void addBook(Book book){
+        if(!this.books.contains(book)){
+            this.books.add(book);
+            book.setStudent(this);
+        }
+    }
+
+    public void removeBook(Book book){
+        if(this.books.contains(book)){
+            this.books.remove(book);
+            book.setStudent(null);
+        }
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,5 +174,17 @@ public class Student {
                 ", email='" + email + '\'' +
                 ", age=" + age +
                 '}';
+    }
+
+    public void setStudentIdCard(StudentIdCard studentIdCard) {
+        this.studentIdCard = studentIdCard;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public String getFirstName() {
+        return first_name;
     }
 }
